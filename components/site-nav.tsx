@@ -103,12 +103,15 @@ export function SiteNav() {
 
           <nav className="hidden md:flex items-center gap-9">
             {links.map((l) => {
-              const isActive = activeId === l.href.slice(1)
+              const isRoute = l.href.startsWith("/")
+              const isActive = isRoute
+                ? pathname === l.href
+                : activeId === l.href.slice(1)
               const cls = cn(
                 "text-sm transition-colors",
                 isActive ? "text-terracotta" : "text-ink-muted hover:text-ink",
               )
-              return l.href.startsWith("/") ? (
+              return isRoute ? (
                 <Link key={l.href} href={l.href} className={cls}>
                   {l.label}
                 </Link>
@@ -179,7 +182,10 @@ export function SiteNav() {
         >
           <ul className="space-y-1">
             {links.map((l, i) => {
-              const isActive = activeId === l.href.slice(1)
+              const isRoute = l.href.startsWith("/")
+              const isActive = isRoute
+                ? pathname === l.href
+                : activeId === l.href.slice(1)
               const cls = cn(
                 "flex items-center gap-4 py-3.5 text-lg transition-colors border-b border-hair",
                 isActive ? "text-terracotta" : "text-ink",

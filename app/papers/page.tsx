@@ -25,7 +25,7 @@ export default function PapersPage() {
               <span className="text-xs text-ink-muted">research</span>
             </div>
             <h1 className="font-serif text-[clamp(2.4rem,5vw,4rem)] leading-[1.05] text-ink tracking-tightest text-balance mb-4">
-              Papers grounded in <em>science.</em>
+              The research behind every <em>metric.</em>
             </h1>
             <p className="text-ink-soft leading-relaxed max-w-xl mb-12">
               Every Gaussia metric traces back to a peer-reviewed publication.
