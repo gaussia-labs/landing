@@ -1,31 +1,29 @@
-import { Navbar } from "@/components/navbar"
-import { HeroSection } from "@/components/hero-section"
-import { ProblemSection } from "@/components/problem-section"
-import { MotivationSection } from "@/components/motivation-section"
-import { MetricsSection } from "@/components/metrics-section"
-import { EnvironmentsSection } from "@/components/environments-section"
-import { RoadmapSection } from "@/components/roadmap-section"
-import { WhyNowSection } from "@/components/why-now-section"
-import { CommunitySection } from "@/components/community-section"
-import { CodeExampleSection } from "@/components/code-example-section"
-import { Footer } from "@/components/footer"
+import { SiteNav } from "@/components/site-nav"
+import { Hero } from "@/components/hero"
+import { Manifesto } from "@/components/manifesto"
+import { WhyGaussia } from "@/components/why-gaussia"
+import { Contract } from "@/components/contract"
+import { HowItWorks } from "@/components/how-it-works"
+import { Modules } from "@/components/modules"
+import { GetStarted } from "@/components/get-started"
+import { Contribute } from "@/components/contribute"
+import { SiteFooter } from "@/components/site-footer"
 
-export default function GaussiaLanding() {
+export default function Page() {
   return (
-    <>
-      <Navbar />
-      <main className="min-h-screen pt-16">
-        <HeroSection />
-        <ProblemSection />
-        <MotivationSection />
-        <MetricsSection />
-        <EnvironmentsSection />
-        <CodeExampleSection />
-        <RoadmapSection />
-        <WhyNowSection />
-        <CommunitySection />
-        <Footer />
+    <div className="min-h-screen bg-background text-foreground">
+      <SiteNav />
+      <main>
+        <Hero />
+        <Manifesto />
+        <WhyGaussia />
+        <Contract />
+        <HowItWorks />
+        <Modules />
+        <GetStarted />
+        <Contribute />
       </main>
-    </>
+      <SiteFooter />
+    </div>
   )
 }

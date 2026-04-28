@@ -1,37 +1,45 @@
-import type { Metadata, Viewport } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
-import { Analytics } from '@vercel/analytics/next'
-import './globals.css'
+import type { Metadata, Viewport } from "next"
+import { Inter, Instrument_Serif, JetBrains_Mono } from "next/font/google"
+import { Analytics } from "@vercel/analytics/next"
+import "./globals.css"
 
-const geistSans = Geist({ 
+const inter = Inter({
   subsets: ["latin"],
-  variable: '--font-geist-sans'
-});
+  variable: "--font-inter",
+  display: "swap",
+})
 
-const geistMono = Geist_Mono({ 
+const instrumentSerif = Instrument_Serif({
   subsets: ["latin"],
-  variable: '--font-geist-mono'
-});
+  weight: ["400"],
+  style: ["normal", "italic"],
+  variable: "--font-instrument-serif",
+  display: "swap",
+})
+
+const jetBrains = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jetbrains-mono",
+  display: "swap",
+})
 
 export const metadata: Metadata = {
-  title: 'Gaussia — AI Response Measurement Library',
-  description: 'Open-source library for evaluating AI-generated content. Detect prompt injection, jailbreaking, bias, toxicity, and ensure AI safety across edge, server, and hardware environments. Crafted by Alquimia AI.',
-  keywords: ['AI safety', 'LLM evaluation', 'prompt injection detection', 'AI metrics', 'machine learning', 'Gaussia', 'Alquimia AI'],
-  authors: [{ name: 'Alquimia AI' }],
+  title: "Gaussia — Metrics grounded in science, built by the community",
+  description:
+    "Open-source metrics that are paper-backed, reproducible, and language-agnostic. Evaluate, protect, and improve AI behaviour with open, auditable tools.",
+  generator: "v0.app",
   openGraph: {
-    title: 'Gaussia — AI Response Measurement Library',
-    description: 'Open-source library for evaluating AI-generated content. Detect prompt injection, jailbreaking, bias, and ensure AI safety.',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Gaussia — AI Response Measurement Library',
-    description: 'Open-source library for evaluating AI-generated content across edge, server, and hardware environments.',
+    title: "Gaussia — Metrics grounded in science, built by the community",
+    description:
+      "Open-source metrics that are paper-backed, reproducible, and language-agnostic.",
+    type: "website",
   },
 }
 
 export const viewport: Viewport = {
-  themeColor: '#ab412d',
+  themeColor: "#f1ede4",
+  width: "device-width",
+  initialScale: 1,
 }
 
 export default function RootLayout({
@@ -40,10 +48,13 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html
+      lang="en"
+      className={`${inter.variable} ${instrumentSerif.variable} ${jetBrains.variable} bg-background`}
+    >
       <body className="font-sans antialiased">
         {children}
-        <Analytics />
+        {process.env.NODE_ENV === "production" && <Analytics />}
       </body>
     </html>
   )
