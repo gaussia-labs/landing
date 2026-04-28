@@ -94,12 +94,12 @@ export function SiteNav() {
         )}
       >
         <div className="mx-auto max-w-6xl flex items-center justify-between px-6 py-3">
-          <a href="#top" className="flex items-center gap-2.5">
+          <Link href="/" className="flex items-center gap-2.5">
             <GaussiaLogo size={30} />
             <span className="font-sans font-medium text-base tracking-tightest text-ink">
               Gaussia
             </span>
-          </a>
+          </Link>
 
           <nav className="hidden md:flex items-center gap-9">
             {links.map((l) => {
