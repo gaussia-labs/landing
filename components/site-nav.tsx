@@ -94,21 +94,24 @@ export function SiteNav() {
         )}
       >
         <div className="mx-auto max-w-6xl flex items-center justify-between px-6 py-3">
-          <a href="#top" className="flex items-center gap-2.5">
+          <Link href="/" className="flex items-center gap-2.5">
             <GaussiaLogo size={30} />
             <span className="font-sans font-medium text-base tracking-tightest text-ink">
               Gaussia
             </span>
-          </a>
+          </Link>
 
           <nav className="hidden md:flex items-center gap-9">
             {links.map((l) => {
-              const isActive = activeId === l.href.slice(1)
+              const isRoute = l.href.startsWith("/")
+              const isActive = isRoute
+                ? pathname === l.href
+                : activeId === l.href.slice(1)
               const cls = cn(
                 "text-sm transition-colors",
                 isActive ? "text-terracotta" : "text-ink-muted hover:text-ink",
               )
-              return l.href.startsWith("/") ? (
+              return isRoute ? (
                 <Link key={l.href} href={l.href} className={cls}>
                   {l.label}
                 </Link>
@@ -179,7 +182,10 @@ export function SiteNav() {
         >
           <ul className="space-y-1">
             {links.map((l, i) => {
-              const isActive = activeId === l.href.slice(1)
+              const isRoute = l.href.startsWith("/")
+              const isActive = isRoute
+                ? pathname === l.href
+                : activeId === l.href.slice(1)
               const cls = cn(
                 "flex items-center gap-4 py-3.5 text-lg transition-colors border-b border-hair",
                 isActive ? "text-terracotta" : "text-ink",
