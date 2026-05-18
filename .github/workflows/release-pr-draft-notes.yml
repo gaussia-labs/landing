@@ -1,0 +1,106 @@
+name: Gaussia landing — draft release notes (release PR)
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+    branches: [master]
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  draft_notes:
+    # Only for the release PR: develop -> master
+    if: github.event.pull_request.head.ref == 'develop'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Build Gaussia landing release notes and update PR body
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            const compare = await github.rest.repos.compareCommits({
+              owner,
+              repo,
+              base: "master",
+              head: "develop",
+              per_page: 250
+            });
+
+            const commits = (compare.data.commits || [])
+              .map(c => (c.commit && c.commit.message ? c.commit.message.split("\n")[0].trim() : ""))
+              .filter(Boolean);
+
+            const rx = /^(feat|fix|task|docs|style|refactor|perf|test|ci|chore)(?:\(([^)]+)\))?(!)?: (.+)$/;
+
+            const buckets = {
+              feat: [], fix: [], task: [], perf: [], refactor: [], docs: [], test: [], ci: [], chore: [], style: [], other: []
+            };
+
+            for (const s of commits) {
+              const m = s.match(rx);
+              if (!m) { buckets.other.push(s); continue; }
+              const type = m[1];
+              const scope = m[2];
+              const bang = m[3];
+              const desc = m[4].trim();
+
+              let line = desc;
+              if (scope) line = `**${scope}**: ${line}`;
+              if (bang) line += " _(BREAKING)_";
+              buckets[type].push(line);
+            }
+
+            const order = [
+              ["feat", "✨ Landing features"],
+              ["fix", "🛠 Fixes"],
+              ["task", "🔧 Landing tasks"],
+              ["perf", "⚡ Performance"],
+              ["refactor", "♻️ Refactors"],
+              ["docs", "📝 Docs & copy"],
+              ["test", "✅ Tests"],
+              ["ci", "🤖 CI"],
+              ["chore", "🧹 Chores"],
+              ["style", "🎨 Style"],
+              ["other", "📦 Other"],
+            ];
+
+            const date = new Date().toISOString().split("T")[0];
+            let md = `## 🚀 Gaussia landing — production release (${date})\n\n`;
+            let any = false;
+            for (const [k, title] of order) {
+              const items = buckets[k];
+              if (!items.length) continue;
+              any = true;
+              md += `### ${title}\n` + items.map(x => `- ${x}`).join("\n") + "\n\n";
+            }
+            if (!any) md = "- No changes detected between `master` and `develop`.\n";
+
+            const start = "<!-- release-notes:start -->";
+            const end = "<!-- release-notes:end -->";
+            const body = pr.body || "";
+
+            let newBody;
+            if (body.includes(start) && body.includes(end)) {
+              const before = body.split(start)[0] + start;
+              const after = body.split(end)[1];
+              newBody = `${before}\n\n${md.trim()}\n\n${end}${after}`;
+            } else {
+              newBody = `${body}\n\n${start}\n\n${md.trim()}\n\n${end}\n`;
+            }
+
+            const prDate = new Date().toISOString().split("T")[0];
+            const prTitle = `Gaussia landing — production release (${prDate})`;
+
+            await github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number,
+              title: prTitle,
+              body: newBody
+            });
